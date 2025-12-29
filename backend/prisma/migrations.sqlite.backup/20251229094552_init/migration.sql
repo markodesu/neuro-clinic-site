@@ -1,0 +1,8 @@
+-- CreateTable
+CREATE TABLE "FAQ" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "question" TEXT NOT NULL,
+    "answer" TEXT NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

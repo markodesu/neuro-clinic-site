@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Faq {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  
+  @@map("FAQ")
+}
+
+model PatientQuestion {
+  id        String   @id @default(uuid())
+  text      String
+  answer    String?  // nullable, врач ещё не ответил
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+}
+

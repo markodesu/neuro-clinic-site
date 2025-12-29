@@ -1,12 +1,22 @@
 // Fix for Railway: convert postgresql:// to postgres:// if needed
+// This must happen BEFORE PrismaClient is imported
 if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgresql://')) {
   process.env.DATABASE_URL = process.env.DATABASE_URL.replace('postgresql://', 'postgres://');
+  console.log('✅ Converted DATABASE_URL protocol from postgresql:// to postgres://');
 }
 
 const express = require("express");
 const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+
+// Create Prisma client with explicit connection string if needed
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL
+    }
+  }
+});
 
 const app = express();
 // CORS configuration - allow all origins for now (можно ограничить конкретными доменами)

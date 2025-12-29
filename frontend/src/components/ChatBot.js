@@ -12,7 +12,11 @@ const ChatBot = () => {
     setMessages(prev => [...prev, userMsg]);
 
     try {
-      const res = await axios.post(`${API_URL}/chat`, { text: input });
+      const url = API_URL ? `${API_URL}/chat` : "/chat";
+      console.log("Sending request to:", url);
+      console.log("API_URL:", API_URL);
+      
+      const res = await axios.post(url, { text: input });
       const botMsg = {
         text: res.data.answer || res.data.message,
         from: "bot",
@@ -20,8 +24,16 @@ const ChatBot = () => {
       };
       setMessages(prev => [...prev, botMsg]);
     } catch (err) {
-      console.error(err);
-      setMessages(prev => [...prev, { text: "Ошибка сервера", from: "bot" }]);
+      console.error("Chat error:", err);
+      console.error("Error response:", err.response?.data);
+      console.error("Error status:", err.response?.status);
+      console.error("Error message:", err.message);
+      
+      const errorMsg = err.response?.data?.error || err.message || "Ошибка сервера";
+      setMessages(prev => [...prev, { 
+        text: `Ошибка: ${errorMsg}`, 
+        from: "bot" 
+      }]);
     }
 
     setInput("");
